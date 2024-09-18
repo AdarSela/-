@@ -1,0 +1,128 @@
+﻿<!DOCTYPE html>
+<html lang="he">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>המשחק שלי</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f8ff;
+        }
+        #game-container {
+            margin-top: 50px;
+        }
+        .category-button {
+            padding: 15px 30px;
+            font-size: 18px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            margin: 10px;
+            cursor: pointer;
+        }
+        .image-button {
+            margin: 10px;
+            cursor: pointer;
+        }
+        img {
+            width: 150px;
+            height: 150px;
+            border: 2px solid #ccc;
+            padding: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<h1>התאם את הסאונד לתמונה</h1>
+<div id="game-container">
+    <h2>בחר קטגוריה:</h2>
+    <button class="category-button" onclick="startGame('חיות')">חיות</button>
+    <button class="category-button" onclick="startGame('פירות')">פירות</button>
+    <button class="category-button" onclick="startGame('כלי תחבורה')">כלי תחבורה</button>
+</div>
+
+<script>
+    const words = {
+        "חיות": [
+            {name: "חתול", image: "https://example.com/cat.jpg", sound: "https://example.com/cat-sound.mp3"},
+            {name: "כלב", image: "https://example.com/dog.jpg", sound: "https://example.com/dog-sound.mp3"},
+            {name: "פיל", image: "https://example.com/elephant.jpg", sound: "https://example.com/elephant-sound.mp3"},
+            {name: "אריה", image: "https://example.com/lion.jpg", sound: "https://example.com/lion-sound.mp3"}
+        ],
+        "פירות": [
+            {name: "תפוח", image: "https://example.com/apple.jpg", sound: "https://example.com/apple-sound.mp3"},
+            {name: "בננה", image: "https://example.com/banana.jpg", sound: "https://example.com/banana-sound.mp3"},
+            {name: "תפוז", image: "https://example.com/orange.jpg", sound: "https://example.com/orange-sound.mp3"},
+            {name: "אפרסק", image: "https://example.com/peach.jpg", sound: "https://example.com/peach-sound.mp3"}
+        ],
+        "כלי תחבורה": [
+            {name: "מכונית", image: "https://example.com/car.jpg", sound: "https://example.com/car-sound.mp3"},
+            {name: "מטוס", image: "https://example.com/plane.jpg", sound: "https://example.com/plane-sound.mp3"},
+            {name: "אופניים", image: "https://example.com/bicycle.jpg", sound: "https://example.com/bicycle-sound.mp3"},
+            {name: "רכבת", image: "https://example.com/train.jpg", sound: "https://example.com/train-sound.mp3"}
+        ]
+    };
+
+    let correctWord = null;
+
+    function startGame(category) {
+        const gameContainer = document.getElementById("game-container");
+        gameContainer.innerHTML = `<h2>בחר את התמונה שתואמת לסאונד מתוך הקטגוריה: ${category}</h2>`;
+        
+        correctWord = words[category][Math.floor(Math.random() * words[category].length)];
+        const shuffledWords = shuffleArray([...words[category]]);
+        
+        const playButton = document.createElement("button");
+        playButton.innerText = "נגן את הסאונד";
+        playButton.onclick = playSound;
+        gameContainer.appendChild(playButton);
+        
+        shuffledWords.forEach(word => {
+            const wordButton = document.createElement("div");
+            wordButton.classList.add("image-button");
+
+            const img = document.createElement("img");
+            img.src = word.image;
+            img.alt = word.name;
+            wordButton.appendChild(img);
+
+            wordButton.onclick = () => checkAnswer(word.name);
+            gameContainer.appendChild(wordButton);
+        });
+    }
+
+    function playSound() {
+        const audio = new Audio(correctWord.sound);
+        audio.play();
+    }
+
+    function checkAnswer(selectedWord) {
+        if (selectedWord === correctWord.name) {
+            alert("תשובה נכונה! כל הכבוד!");
+        } else {
+            alert("תשובה שגויה! נסה שוב.");
+        }
+        // חזרה למסך הראשי לאחר מתן תשובה
+        location.reload();
+    }
+
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+</script>
+
+</body>
+</html>
